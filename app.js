@@ -68,9 +68,20 @@ const authRoutes = require('./routes/authRoutes')
 
 const app = express()
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://diamond-milk-frontend.vercel.app',
+]
+
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
     credentials: true,
   })
 )
